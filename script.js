@@ -5,12 +5,23 @@ function createElement(html) {
 }
 
 class Game {
-  constructor() {
+  constructor(data, Stone) {
+    this._data = data;
+    this._Stone = Stone;
     this._init();
   }
 
   _init() {
     this._element = createElement(this._getTemplate());
+    this._render()
+  }
+
+  _generateStones(){
+    return this._data.map((el) => new this._Stone(el).element)
+  }
+
+  _render(){
+    this._element.querySelector(".game__wrapper").append(...this._generateStones())
   }
 
   _getTemplate() {
@@ -30,7 +41,12 @@ class Game {
 }
 
 class Stone {
-  constructor() {
+  constructor({id, color, img}) {
+    this._id = id;
+    this._color = color;
+    this._img = img;
+    console.log(this._img);
+    
     this._init();
   }
 
@@ -39,8 +55,8 @@ class Stone {
   }
 
   _getTemplate() {
-    return `<button class="stone" disabled>
-            <img class="stone__img" src="./image/t2.png" alt="" />
+    return `<button class="stone">
+            <img class="stone__img" src="./image/${this._img}.png" alt="" />
           </button>`;
   }
 
@@ -113,4 +129,4 @@ const data = [
 ];
 
 const root = document.querySelector(".root");
-root.insertAdjacentElement("beforeend", new Game().element);
+root.insertAdjacentElement("beforeend", new Game(data, Stone).element);

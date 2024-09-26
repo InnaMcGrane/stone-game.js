@@ -1,0 +1,81 @@
+body {
+  background-color: #4d3e4e;
+}
+
+.game {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+
+.game__btn {
+  margin-bottom: 10px;
+}
+
+.btn {
+  cursor: pointer;
+}
+
+.btn--start {
+  padding: 10px 15px;
+  background-color: #14ae7f;
+  font-weight: bold;
+  color: white;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.game__found {
+  font-size: 25px;
+  color: #0083cc;
+  font-weight: bold;
+}
+
+.game__total {
+  font-size: 25px;
+  color: #0083cc;
+  font-weight: bold;
+}
+
+.game__wrapper {
+  outline: 5px solid #cc6316;
+  /* padding: 5px; */
+  /* width: 300px; */
+  /* height: 300px; */
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.stone {
+  width: 75px;
+  height: 75px;
+  padding: 3px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.stone:hover {
+  transform: scale(1.05);
+}
+
+.stone--hide {
+  filter: grayscale();
+}
+
+.stone:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* 
+
+0.5 - 50% size
+1 - 100% size
+1.1 - 110% size
+1.05 - 105% size
+
+*/

@@ -5,7 +5,11 @@ function createElement(html) {
 }
 
 class Game {
-  constructor(data, Stone) {
+    _state = {
+        pair: []
+    }
+  
+    constructor(data, Stone) {
     this._data = data;
     this._Stone = Stone;
     this._init();
@@ -17,7 +21,20 @@ class Game {
   }
 
   _generateStones(){
-    return this._data.map((el) => new this._Stone(el).element)
+    return this._data.map((el) => new this._Stone(el, this._setStatePairHandler.bind(this)).element)
+  }
+
+  // {id: 35, color: 'green'}
+  _setStatePair(obj){
+    if (this._state.pair.length === 2) {
+        this._state.pair = []
+    } 
+    this._state.pair.push(obj)
+  }
+
+  _setStatePairHandler(obj) {
+    this._setStatePair(obj)
+    console.log(this._state.pair);
   }
 
   _render(){
@@ -41,17 +58,17 @@ class Game {
 }
 
 class Stone {
-  constructor({id, color, img}) {
+  constructor({id, color, img}, setStatePairHandler) {
     this._id = id;
     this._color = color;
     this._img = img;
-    console.log(this._img);
-    
+    this._setStatePairHandler = setStatePairHandler;
     this._init();
   }
 
   _init() {
     this._element = createElement(this._getTemplate());
+    this._addListeners()
   }
 
   _getTemplate() {
@@ -59,6 +76,30 @@ class Stone {
             <img class="stone__img" src="./image/${this._img}.png" alt="" />
           </button>`;
   }
+
+  _addListeners() {
+    this._element.addEventListener("click", () => {
+      this._setStatePairHandler({
+        id: this._id,
+        color: this._color
+      });
+    })
+  }
+
+  /* 
+  
+  1. click stone
+  2. stone -> id + color
+  3. parent storage id + color
+
+  2. stone -> id + color
+  3. parent storage id + color
+
+  ---------------
+  когда в storage есть 2 выбранных stone, родитель сравнивает цвета
+  если цвета сошлись, пара найдена (disabled)
+  
+  */
 
   get element() {
     return this._element;

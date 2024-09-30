@@ -5,11 +5,22 @@ function createElement(html) {
 }
 
 class Game {
-    _state = {
-        pair: []
+  _state = {
+    pair: [],
+    stonesStatus: []
+  };
+
+  /* 
+  
+  {
+      id: 54,
+      disabled: false,
+      hide: false
     }
   
-    constructor(data, Stone) {
+  */
+
+  constructor(data, Stone) {
     this._data = data;
     this._Stone = Stone;
     this._init();
@@ -17,28 +28,55 @@ class Game {
 
   _init() {
     this._element = createElement(this._getTemplate());
-    this._render()
+    this._setStateStonesStatus(this._data.map((el) => {
+      return {
+        id: el.id,
+        color: el.color,
+        img: el.img,
+        disabled: false,
+        hide: false,
+      };
+    }))
+    this._render();
   }
 
-  _generateStones(){
-    return this._data.map((el) => new this._Stone(el, this._setStatePairHandler.bind(this)).element)
+  _generateStones() {
+    return this._state.stonesStatus.map((el) => new this._Stone(el, this._setStatePairHandler.bind(this)).element);
   }
 
   // {id: 35, color: 'green'}
-  _setStatePair(obj){
+  _setStatePair(obj) {
     if (this._state.pair.length === 2) {
-        this._state.pair = []
-    } 
-    this._state.pair.push(obj)
+      this._state.pair = [];
+    }
+    this._state.pair.push(obj);
+  }
+
+  _setStateStonesStatus(newStateStones){
+    this._state.stonesStatus = newStateStones
   }
 
   _setStatePairHandler(obj) {
-    this._setStatePair(obj)
+    this._setStatePair(obj);
     console.log(this._state.pair);
+    console.log(this._isEqualPair());
   }
 
-  _render(){
-    this._element.querySelector(".game__wrapper").append(...this._generateStones())
+  // return bool true false
+  _isEqualPair() {
+    if (this._state.pair.length < 2) {
+      return false;
+    }
+
+    if (this._state.pair[0].color === this._state.pair[1].color) {
+      return true;
+    }
+
+    return false;
+  }
+
+  _render() {
+    this._element.querySelector(".game__wrapper").append(...this._generateStones());
   }
 
   _getTemplate() {
@@ -58,21 +96,23 @@ class Game {
 }
 
 class Stone {
-  constructor({id, color, img}, setStatePairHandler) {
+  constructor({ id, color, img, disabled, hide }, setStatePairHandler) {
     this._id = id;
     this._color = color;
     this._img = img;
+    this._disabled = disabled,
+    this._hide = hide,
     this._setStatePairHandler = setStatePairHandler;
     this._init();
   }
 
   _init() {
     this._element = createElement(this._getTemplate());
-    this._addListeners()
+    this._addListeners();
   }
 
   _getTemplate() {
-    return `<button class="stone">
+    return `<button class="stone" ${this._disabled === true ? "disabled" : ""}>
             <img class="stone__img" src="./image/${this._img}.png" alt="" />
           </button>`;
   }
@@ -81,9 +121,9 @@ class Stone {
     this._element.addEventListener("click", () => {
       this._setStatePairHandler({
         id: this._id,
-        color: this._color
+        color: this._color,
       });
-    })
+    });
   }
 
   /* 

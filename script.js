@@ -7,7 +7,7 @@ function createElement(html) {
 class Game {
   _state = {
     pair: [],
-    stonesStatus: []
+    stonesStatus: [],
   };
 
   /* 
@@ -28,15 +28,17 @@ class Game {
 
   _init() {
     this._element = createElement(this._getTemplate());
-    this._setStateStonesStatus(this._data.map((el) => {
-      return {
-        id: el.id,
-        color: el.color,
-        img: el.img,
-        disabled: false,
-        hide: false,
-      };
-    }))
+    this._setStateStonesStatus(
+      this._data.map((el) => {
+        return {
+          id: el.id,
+          color: el.color,
+          img: el.img,
+          disabled: false,
+          hide: false,
+        };
+      })
+    );
     this._render();
   }
 
@@ -52,14 +54,33 @@ class Game {
     this._state.pair.push(obj);
   }
 
-  _setStateStonesStatus(newStateStones){
-    this._state.stonesStatus = newStateStones
+  _setStateStonesStatus(newStateStones) {
+    this._state.stonesStatus = newStateStones;
   }
 
   _setStatePairHandler(obj) {
     this._setStatePair(obj);
+
     console.log(this._state.pair);
-    console.log(this._isEqualPair());
+
+    if (this._isEqualPair()) {
+      const idsStonesInPair = [this._state.pair[0].id, this._state.pair[1].id];
+
+      const newStateStonesArray = this._state.stonesStatus.map((el) => {
+        if (idsStonesInPair.includes(el.id)) {
+          // камень найден по id
+          el.disabled = true;
+          return el;
+        }
+
+        return el;
+      });
+
+      this._setStateStonesStatus(newStateStonesArray);
+    }
+
+    // перерисовка (при клике на камень)
+    this._render();
   }
 
   // return bool true false
@@ -76,6 +97,7 @@ class Game {
   }
 
   _render() {
+    this._element.querySelector(".game__wrapper").textContent = "";
     this._element.querySelector(".game__wrapper").append(...this._generateStones());
   }
 
@@ -100,9 +122,7 @@ class Stone {
     this._id = id;
     this._color = color;
     this._img = img;
-    this._disabled = disabled,
-    this._hide = hide,
-    this._setStatePairHandler = setStatePairHandler;
+    (this._disabled = disabled), (this._hide = hide), (this._setStatePairHandler = setStatePairHandler);
     this._init();
   }
 
@@ -112,7 +132,7 @@ class Stone {
   }
 
   _getTemplate() {
-    return `<button class="stone" ${this._disabled === true ? "disabled" : ""}>
+    return `<button class="stone ${this._hide === true ? "stone--hide" : ""}" ${this._disabled === true ? "disabled" : ""}>
             <img class="stone__img" src="./image/${this._img}.png" alt="" />
           </button>`;
   }

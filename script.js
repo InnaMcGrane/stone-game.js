@@ -8,6 +8,7 @@ class Game {
   _state = {
     pair: [],
     stonesStatus: [],
+    gameActive: false
   };
 
   /* 
@@ -39,6 +40,7 @@ class Game {
         };
       })
     );
+    this._addListeners();
     this._render();
   }
 
@@ -52,6 +54,10 @@ class Game {
       this._state.pair = [];
     }
     this._state.pair.push(obj);
+  }
+
+  _setStateGameActive(status) {
+    this._state.gameActive = status
   }
 
   _setStateStonesStatus(newStateStones) {
@@ -99,6 +105,7 @@ class Game {
   _render() {
     this._element.querySelector(".game__wrapper").textContent = "";
     this._element.querySelector(".game__wrapper").append(...this._generateStones());
+    this._element.querySelector(".btn--start").textContent = this._state.gameActive === true ? "Finish Game" : " Start Game"
   }
 
   _getTemplate() {
@@ -110,6 +117,13 @@ class Game {
         <span class="game__total">total parts: 0</span>
         <div class="game__wrapper"></div>
         </div>`;
+  }
+
+  _addListeners() {
+    this._element.querySelector(".btn--start").addEventListener("click", () => {
+      this._setStateGameActive(!this._state.gameActive)
+      this._render()
+    });
   }
 
   get element() {

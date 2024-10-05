@@ -8,7 +8,7 @@ class Game {
   _state = {
     pair: [],
     stonesStatus: [],
-    gameActive: false
+    gameActive: false,
   };
 
   /* 
@@ -27,6 +27,8 @@ class Game {
     this._init();
   }
 
+  // const shuffledArray = array.sort((a, b) => 0.5 - Math.random());
+
   _init() {
     this._element = createElement(this._getTemplate());
     this._setStateStonesStatus(
@@ -38,7 +40,7 @@ class Game {
           disabled: false,
           hide: false,
         };
-      })
+      }).sort((a, b) => 0.5 - Math.random())
     );
     this._addListeners();
     this._render();
@@ -57,7 +59,7 @@ class Game {
   }
 
   _setStateGameActive(status) {
-    this._state.gameActive = status
+    this._state.gameActive = status;
   }
 
   _setStateStonesStatus(newStateStones) {
@@ -76,6 +78,7 @@ class Game {
         if (idsStonesInPair.includes(el.id)) {
           // камень найден по id
           el.disabled = true;
+          el.hide = false;
           return el;
         }
 
@@ -105,7 +108,7 @@ class Game {
   _render() {
     this._element.querySelector(".game__wrapper").textContent = "";
     this._element.querySelector(".game__wrapper").append(...this._generateStones());
-    this._element.querySelector(".btn--start").textContent = this._state.gameActive === true ? "Finish Game" : " Start Game"
+    this._element.querySelector(".btn--start").textContent = this._state.gameActive === true ? "Finish Game" : " Start Game";
   }
 
   _getTemplate() {
@@ -121,8 +124,15 @@ class Game {
 
   _addListeners() {
     this._element.querySelector(".btn--start").addEventListener("click", () => {
-      this._setStateGameActive(!this._state.gameActive)
-      this._render()
+      this._setStateGameActive(!this._state.gameActive);
+      // если состояние игры "играю" -> скрыть камни
+      this._setStateStonesStatus(
+        this._state.stonesStatus.map((el) => {
+          el.hide = this._state.gameActive === true ? true : false;
+          return el;
+        })
+      );
+      this._render();
     });
   }
 
@@ -136,7 +146,9 @@ class Stone {
     this._id = id;
     this._color = color;
     this._img = img;
-    (this._disabled = disabled), (this._hide = hide), (this._setStatePairHandler = setStatePairHandler);
+    this._disabled = disabled;
+    this._hide = hide;
+    this._setStatePairHandler = setStatePairHandler;
     this._init();
   }
 
@@ -238,6 +250,26 @@ const data = [
   },
   {
     id: 323446,
+    color: "violet",
+    img: "t4",
+  },
+  {
+    id: 6587,
+    color: "blue",
+    img: "t2",
+  },
+  {
+    id: 89,
+    color: "red",
+    img: "t1",
+  },
+  {
+    id: 6507,
+    color: "green",
+    img: "t3",
+  },
+  {
+    id: 2146,
     color: "violet",
     img: "t4",
   },

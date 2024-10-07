@@ -105,10 +105,28 @@ class Game {
     return false;
   }
 
+  _getTotalParts(){
+    const obj = {};
+
+    this._state.stonesStatus.forEach((el) => {
+      if (obj[el.color] === undefined) {
+        obj[el.color] = 1;
+      } else {
+        obj[el.color] += 1;
+      }
+    })
+
+    return Object.values(obj).reduce((acc, num) => {
+      acc += Math.floor(num / 2)
+      return acc
+    }, 0)
+  }
+
   _render() {
     this._element.querySelector(".game__wrapper").textContent = "";
     this._element.querySelector(".game__wrapper").append(...this._generateStones());
     this._element.querySelector(".btn--start").textContent = this._state.gameActive === true ? "Finish Game" : " Start Game";
+    this._element.querySelector(".game__total").textContent = `total parts: ${this._getTotalParts()}`;
   }
 
   _getTemplate() {

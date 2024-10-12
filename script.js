@@ -33,15 +33,17 @@ class Game {
   _init() {
     this._element = createElement(this._getTemplate());
     this._setStateStonesStatus(
-      this._data.map((el) => {
-        return {
-          id: el.id,
-          color: el.color,
-          img: el.img,
-          disabled: true,
-          hide: false,
-        };
-      }).sort((a, b) => 0.5 - Math.random())
+      this._data
+        .map((el) => {
+          return {
+            id: el.id,
+            color: el.color,
+            img: el.img,
+            disabled: true,
+            hide: false,
+          };
+        })
+        .sort((a, b) => 0.5 - Math.random())
     );
     this._addListeners();
     this._render();
@@ -72,6 +74,10 @@ class Game {
   }
 
   _setStatePairHandler(obj) {
+    if (this._state.pair.length === 1 && this._state.pair[0].id === obj.id) {
+      return;
+    }
+
     this._setStatePair(obj);
 
     console.log(this._state.pair);
@@ -91,7 +97,7 @@ class Game {
       });
 
       this._setStateStonesStatus(newStateStonesArray);
-      this._setStateFoundParts(this._state.foundParts + 1)
+      this._setStateFoundParts(this._state.foundParts + 1);
     }
 
     // перерисовка (при клике на камень)
@@ -111,7 +117,7 @@ class Game {
     return false;
   }
 
-  _getTotalParts(){
+  _getTotalParts() {
     const obj = {};
 
     this._state.stonesStatus.forEach((el) => {
@@ -120,12 +126,12 @@ class Game {
       } else {
         obj[el.color] += 1;
       }
-    })
+    });
 
     return Object.values(obj).reduce((acc, num) => {
-      acc += Math.floor(num / 2)
-      return acc
-    }, 0)
+      acc += Math.floor(num / 2);
+      return acc;
+    }, 0);
   }
 
   _render() {
@@ -154,24 +160,25 @@ class Game {
       // игра активна
       if (this._state.gameActive === true) {
         // если состояние игры "играю" -> скрыть камни
-      this._setStateStonesStatus(
-        this._state.stonesStatus.map((el) => {
-          el.disabled = false;
-          el.hide = this._state.gameActive === true ? true : false;
-          return el;
-        })
-      );
+        this._setStateStonesStatus(
+          this._state.stonesStatus.map((el) => {
+            el.disabled = false;
+            el.hide = this._state.gameActive === true ? true : false;
+            return el;
+          })
+        );
       }
 
       // игра не активна
       if (this._state.gameActive === false) {
         this._setStateFoundParts(0);
-        this._setStateStonesStatus(this._state.stonesStatus.map((el) => {
-          el.disabled = true;
-          el.hide = false;
-          return el;
-
-        }))
+        this._setStateStonesStatus(
+          this._state.stonesStatus.map((el) => {
+            el.disabled = true;
+            el.hide = false;
+            return el;
+          })
+        );
       }
 
       this._render();

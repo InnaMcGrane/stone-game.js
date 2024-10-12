@@ -38,7 +38,7 @@ class Game {
           id: el.id,
           color: el.color,
           img: el.img,
-          disabled: false,
+          disabled: true,
           hide: false,
         };
       }).sort((a, b) => 0.5 - Math.random())
@@ -153,27 +153,26 @@ class Game {
 
       // игра активна
       if (this._state.gameActive === true) {
-        
+        // если состояние игры "играю" -> скрыть камни
+      this._setStateStonesStatus(
+        this._state.stonesStatus.map((el) => {
+          el.disabled = false;
+          el.hide = this._state.gameActive === true ? true : false;
+          return el;
+        })
+      );
       }
 
       // игра не активна
       if (this._state.gameActive === false) {
         this._setStateFoundParts(0);
         this._setStateStonesStatus(this._state.stonesStatus.map((el) => {
-          el.disabled = false;
+          el.disabled = true;
           el.hide = false;
           return el;
 
         }))
       }
-
-      // если состояние игры "играю" -> скрыть камни
-      this._setStateStonesStatus(
-        this._state.stonesStatus.map((el) => {
-          el.hide = this._state.gameActive === true ? true : false;
-          return el;
-        })
-      );
 
       this._render();
     });
